@@ -84,7 +84,7 @@ API = callable class
 
       request_options[prop] = kwargs.data
 
-    if kwargs.formData? && method is 'POST'
+    if kwargs.formData? && Object.keys(kwargs.formData).length > 0 && method is 'POST'
       request_options.formData = kwargs.formData
 
     if @opts.auth
@@ -198,6 +198,8 @@ API = callable class
     handle = (err, response, body) =>
       if 200 <= response.statusCode <= 299
         return @wrap_response fn, err, response, @_try_to_serialize(response, body)
+      else if 400 <= response.statusCode <= 599
+        return @wrap_response fn, { "statusCode": response.statusCode }, response, null
       return @wrap_response fn, err, response, true
 
     resp = @_request 'POST', opts, handle
