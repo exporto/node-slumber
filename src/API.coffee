@@ -199,8 +199,9 @@ API = callable class
       if 200 <= response.statusCode <= 299
         return @wrap_response fn, err, response, @_try_to_serialize(response, body)
       else if 400 <= response.statusCode <= 599
-        return @wrap_response fn, { "statusCode": response.statusCode }, response, null
-      return @wrap_response fn, err, response, true
+        return @wrap_response fn, { "statusCode": response.statusCode }, response, @_try_to_serialize(response, body)
+      else
+        return @wrap_response fn, err, response, true
 
     resp = @_request 'POST', opts, handle
 
@@ -224,7 +225,10 @@ API = callable class
     handle = (err, response, body) =>
       if 200 <= response.statusCode <= 299
         return @wrap_response fn, err, response, @_try_to_serialize(response, body)
-      return @wrap_response fn, true, response, null
+      else if 400 <= response.statusCode <= 599
+        return @wrap_response fn, { "statusCode": response.statusCode }, response, @_try_to_serialize(response, body)
+      else
+        return @wrap_response fn, true, response, null
 
     resp = @_request 'PUT', opts, handle
 

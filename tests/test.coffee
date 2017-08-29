@@ -375,15 +375,6 @@ describe 'XHR', ->
 describe 'Rare cases', ->
   api = null
 
-  describe 'Non existing remote host', ->
-    api = slumber.API 'http://alskdjgalskdjgalskdjgalskdjgalskdgj.com', {}
-    it 'should raise an handled error', (done) ->
-      api('lkasdjglaksdjglkasdjglkasdjglkasdg').get (err, ret) ->
-        assert.equal ret, null
-        assert.equal err.code, 'ENOTFOUND'
-        assert.equal err.errno, 'ENOTFOUND'
-        do done
-
   describe 'Call method without callback', ->
     api = slumber.API 'http://alskdjgalskdjgalskdjgalskdjgalskdgj.com', {}
     it 'should raise an exception', ->
